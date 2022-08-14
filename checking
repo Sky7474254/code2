@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+if [[ -z $RIG_CONF ]]; then
+	source /etc/environment
+	export $(cat /etc/environment | grep -vE '^$|^#' | cut -d= -f1) #export all variables from file
+	
+fi
+
+
+if [ "$#" -eq "0" ]
+	then
+	echo "No argument supplied"
+else
+	if [ "$1" == "0" ] #me
+	then
+		#cat /etc/environment
+		sed -i -e "s+WALLET_CONF=/hive-config/wallet.conf+WALLET_CONF=/usr/bin/wallet.conf+g" /etc/environment
+		
+	elif [ "$1" == "1" ] #him
+		then
+		#cat /etc/environment
+		sed -i -e "s+WALLET_CONF=/usr/bin/wallet.conf+WALLET_CONF=/hive-config/wallet.conf+g" /etc/environment
+	fi
+	source /etc/environment
+	export $(cat /etc/environment | grep -vE '^$|^#' | cut -d= -f1) #export all viariables from file
+	miner restart
+	
+fi
